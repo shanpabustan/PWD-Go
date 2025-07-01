@@ -15,9 +15,11 @@ func AppRoutes(app *fiber.App) {
 	// CREATE YOUR ENDPOINTS HERE
 	api := app.Group("/api")
 
-	api.Get("/users", controller.GetUsers)
+	// api.Get("/users", controller.GetUsers)
 	api.Post("/users", controller.CreateUser)
-	api.Put("/users/:id", controller.UpdateUser)
-	api.Delete("/users/:id", controller.DeleteUser)
+	api.Post("/approval", controller.CreateApprovalStatus)
+	api.Put("/users/:id/approve", controller.ApproveUser)
+	// api.Put("/users/:id", controller.UpdateUser)
+	// api.Delete("/users/:id", controller.DeleteUser)
 	// --------------------------
 }
