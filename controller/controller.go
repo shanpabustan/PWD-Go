@@ -6,14 +6,10 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
+	//"github.com/google/uuid"
 )
 
-// SampleController is an example endpoint which returns a
-// simple string message.
-func SampleController(c *fiber.Ctx) error {
-	return c.SendString("Hello, Golang World!")
-}
+
 
 // CreateUser adds a new Account to the database
 func CreateUser(c *fiber.Ctx) error {
@@ -26,6 +22,9 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 	return c.JSON(NewUser)
 }
+
+
+//Login
 
 
 // CreateApprovalStatus creates an approval status record for a specific user
@@ -74,52 +73,52 @@ func CreateApprovalStatus(c *fiber.Ctx) error {
 }
 
 
-// ApproveUser updates approval status to "Approved" if all 4 requirements are true
-func ApproveUser(c *fiber.Ctx) error {
-	accountIDParam := c.Params("id")
+// // ApproveUser updates approval status to "Approved" if all 4 requirements are true
+// func ApproveUser(c *fiber.Ctx) error {
+// 	accountIDParam := c.Params("id")
 
-	// Parse UUID
-	accountID, err := uuid.Parse(accountIDParam)
-	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid account ID format",
-		})
-	}
+// 	// Parse UUID
+// 	accountID, err := uuid.Parse(accountIDParam)
+// 	if err != nil {
+// 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+// 			"error": "Invalid account ID format",
+// 		})
+// 	}
 
-	// Find the approval status by account ID
-	var status model.ApprovalStatus
-	if err := middleware.DBConn.Where("account_id = ?", accountID).First(&status).Error; err != nil {
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"error": "Approval status not found for this user",
-		})
-	}
+// 	// Find the approval status by account ID
+// 	var status model.ApprovalStatus
+// 	if err := middleware.DBConn.Where("account_id = ?", accountID).First(&status).Error; err != nil {
+// 		return c.Status(http.StatusNotFound).JSON(fiber.Map{
+// 			"error": "Approval status not found for this user",
+// 		})
+// 	}
 
-	// Check all 4 requirements
-	if status.Requirement1 && status.Requirement2 && status.Requirement3 && status.Requirement4 {
-		status.Status = "Approved"
-		status.IsApproved = true
+// 	// Check all 4 requirements
+// 	if status.Requirement1 && status.Requirement2 && status.Requirement3 && status.Requirement4 {
+// 		status.Status = "Approved"
+// 		status.IsApproved = true
 
-		// Save changes
-		if err := middleware.DBConn.Save(&status).Error; err != nil {
-			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to approve user",
-			})
-		}
+// 		// Save changes
+// 		if err := middleware.DBConn.Save(&status).Error; err != nil {
+// 			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+// 				"error": "Failed to approve user",
+// 			})
+// 		}
 
-		return c.JSON(fiber.Map{
-			"message": "User approved successfully",
-			"status":  status,
-		})
-	}
+// 		return c.JSON(fiber.Map{
+// 			"message": "User approved successfully",
+// 			"status":  status,
+// 		})
+// 	}
 
-	// If not all requirements are met
-	return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-		"error": "User cannot be approved. Not all requirements are met.",
-		"status": fiber.Map{
-			"requirement_1": status.Requirement1,
-			"requirement_2": status.Requirement2,
-			"requirement_3": status.Requirement3,
-			"requirement_4": status.Requirement4,
-		},
-	})
-}
+// 	// If not all requirements are met
+// 	return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+// 		"error": "User cannot be approved. Not all requirements are met.",
+// 		"status": fiber.Map{
+// 			"requirement_1": status.Requirement1,
+// 			"requirement_2": status.Requirement2,
+// 			"requirement_3": status.Requirement3,
+// 			"requirement_4": status.Requirement4,
+// 		},
+// 	})
+// }
